@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_DWcNAMGEEea1veiESkADBA" name="RootElement">
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_DYQK4MGEEea1veiESkADBA" name="StateMachine1">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_PTI4AMb0EeaJF7jf5VRUNA" name="Op1" method="_RZ3T8Mb0EeaJF7jf5VRUNA"/>
+    <region xmi:type="uml:Region" xmi:id="_DbP0gMGEEea1veiESkADBA" name="Region1">
+      <transition xmi:type="uml:Transition" xmi:id="_OesYwMbzEeaJF7jf5VRUNA" kind="local" source="_Je-RgMGEEea1veiESkADBA" target="_faHTIMGEEea1veiESkADBA">
+        <trigger xmi:type="uml:Trigger" xmi:id="_l2Q8IMbzEeaJF7jf5VRUNA" name="TE1" event="_V_tTIMbzEeaJF7jf5VRUNA"/>
+      </transition>
+      <subvertex xmi:type="uml:State" xmi:id="_Je-RgMGEEea1veiESkADBA" name="State1">
+        <entry xmi:type="uml:Activity" xmi:id="_RZ3T8Mb0EeaJF7jf5VRUNA" specification="_PTI4AMb0EeaJF7jf5VRUNA"/>
+      </subvertex>
+      <subvertex xmi:type="uml:State" xmi:id="_faHTIMGEEea1veiESkADBA" name="State2"/>
+    </region>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_ScRBkMbzEeaJF7jf5VRUNA" name="E1"/>
+  <packagedElement xmi:type="uml:SignalEvent" xmi:id="_V_tTIMbzEeaJF7jf5VRUNA" name="SE1"/>
+  <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_YHc90MGEEea1veiESkADBA">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_YHfaEMGEEea1veiESkADBA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#_Kv8EIKFXEeS_KNX0nfvIVQ"/>
+    </eAnnotations>
+    <appliedProfile xmi:type="uml:Profile" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
+  </profileApplication>
+</uml:Model>
