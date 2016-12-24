@@ -2,6 +2,9 @@ package org.awesley.samples;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +38,13 @@ public class StatemachineApplicationTests {
 
 	@Test
 	public void loadStateMachineModel(){
+		ResourceSet resourceSet = new ResourceSetImpl();
+		UMLPackage umlPackage = UMLPackage.eINSTANCE;
+		resourceSet.getPackageRegistry().put(umlPackage.getNsURI(), mlPackage);
+		
 		UmlStateMachineModelFactory umlStateMachineModelFactory;
 		
-		umlStateMachineModelFactory = new UmlStateMachineModelFactory(new ClassPathResource("model.uml"));
+		umlStateMachineModelFactory = new UmlStateMachineModelFactory(new ClassPathResource("StateMachine2.uml"));
 		StateMachineModel<String, String> stateMachineModel = umlStateMachineModelFactory.build();
 		
 		assertNotNull(stateMachineModel);
