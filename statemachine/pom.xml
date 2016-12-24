@@ -46,13 +46,13 @@
 		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.emf</groupId>
-		    <artifactId>ecore</artifactId>
-		    <version>2.1.0</version>
+		    <artifactId>org.eclipse.emf.ecore</artifactId>
+		    <version>2.11.1-v20150805-0538</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.emf</groupId>
-		    <artifactId>ecore-xmi</artifactId>
-		    <version>2.1.0</version>
+		    <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+		    <version>2.11.1-v20150805-0538</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -85,14 +85,14 @@
         <repository>
             <id>spring-release</id>
             <url>http://repo.spring.io/libs-release</url>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 		<repository>
@@ -109,6 +109,11 @@
             <id>spring-release</id>
             <url>http://repo.spring.io/libs-release</url>
             <snapshots><enabled>false</enabled></snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-snapshot</id>
+            <url>http://repo.spring.io/libs-snapshot</url>
+            <snapshots><enabled>true</enabled></snapshots>
         </pluginRepository>
     </pluginRepositories>
 </project>
