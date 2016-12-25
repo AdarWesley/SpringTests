@@ -25,6 +25,9 @@ public class StatemachineApplicationTests {
 	
 	@Autowired
 	StateMachineFactory<String, String> proposalStateMachineFactory;
+	
+	@Autowired
+	StateMachineFactory<String, String> factoryBasedOnUml;
 
 	@Test
 	public void contextLoads() {
@@ -40,19 +43,16 @@ public class StatemachineApplicationTests {
 
 	@Test
 	public void loadStateMachineModel(){
-//		ResourceSet resourceSet = new ResourceSetImpl();
-//		UMLPackage umlPackage = UMLPackage.eINSTANCE;
-//		resourceSet.getPackageRegistry().put(umlPackage.getNsURI(), umlPackage);
-		
 		UmlStateMachineModelFactory umlStateMachineModelFactory;
 		
 		umlStateMachineModelFactory = new UmlStateMachineModelFactory(new ClassPathResource("StateMachine2.uml"));
 		StateMachineModel<String, String> stateMachineModel = umlStateMachineModelFactory.build();
 		assertNotNull(stateMachineModel);
-		
-		ObjectStateMachineFactory<String, String> factory = new ObjectStateMachineFactory<>(stateMachineModel);
-		
-		StateMachine<String, String> stateMachine = factory.getStateMachine();
+	}
+	
+	@Test
+	public void loadStateMachineFromUmlUsingModelFactory(){
+		StateMachine<String, String> stateMachine = factoryBasedOnUml.getStateMachine();
 		assertNotNull(stateMachine);
 	}
 }
