@@ -17,11 +17,11 @@ public class StateMachineFromUmlConfig extends StateMachineConfigurerAdapter<Str
     public void configure(StateMachineModelConfigurer<String, String> model) throws Exception {
         model
             .withModel()
-                .factory(modelFactory());
+                .factory(modelFromUmlFactory());
     }
 
     @Bean
-    public StateMachineModelFactory<String, String> modelFactory() {
+    public StateMachineModelFactory<String, String> modelFromUmlFactory() {
         return new UmlStateMachineModelFactory(new ClassPathResource("StateMachine2.uml")); //"classpath:org/springframework/statemachine/uml/docs/simple-machine.uml");
     }
 }
