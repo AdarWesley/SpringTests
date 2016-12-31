@@ -1,6 +1,7 @@
 package org.awesley.samples;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -12,8 +13,11 @@ import org.springframework.statemachine.data.StateRepository;
 import org.springframework.statemachine.data.TransitionRepository;
 import org.springframework.statemachine.data.jpa.JpaRepositoryState;
 import org.springframework.statemachine.data.jpa.JpaRepositoryTransition;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
+@EnableJpaRepositories("org.springframework.statemachine.data.jpa")
+@EntityScan("org.springframework.statemachine.data.jpa")
 @EnableStateMachineFactory(name = { "stateMachineRepositoryFactory" })
 public class StateMachineRepositoryConfig extends StateMachineConfigurerAdapter<String, String> {
 

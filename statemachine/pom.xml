@@ -37,13 +37,13 @@
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework.statemachine</groupId>
-		    <artifactId>spring-statemachine-data-common</artifactId>
+		    <artifactId>spring-statemachine-data-jpa</artifactId>
 		    <version>1.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.springframework.statemachine</groupId>
-		    <artifactId>spring-statemachine-data-jpa</artifactId>
-		    <version>1.2.0.RELEASE</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>1.2.0.RELEASE</version>
 		</dependency>
         <dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -65,9 +65,9 @@
 		    <version>2.11.1-v20150805-0538</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.3.1</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.185</version>
 		</dependency>
 	</dependencies>
 	<build>
