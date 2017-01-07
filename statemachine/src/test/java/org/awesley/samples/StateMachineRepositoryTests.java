@@ -9,14 +9,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
+import org.springframework.statemachine.data.ActionRepository;
 import org.springframework.statemachine.data.StateRepository;
 import org.springframework.statemachine.data.TransitionRepository;
 import org.springframework.statemachine.data.jpa.JpaRepositoryAction;
@@ -34,6 +40,9 @@ public class StateMachineRepositoryTests {
 	TransitionRepository<JpaRepositoryTransition> transitionRepository;
 	
 	@Autowired
+	ActionRepository<JpaRepositoryAction> actionRepository;
+	
+	@Autowired
 	StateMachineFactory<String, String> stateMachineRepositoryFactory;
 	
 	@Before
@@ -45,8 +54,9 @@ public class StateMachineRepositoryTests {
 		Set<JpaRepositoryAction> actionSet = new HashSet<JpaRepositoryAction>();
 		JpaRepositoryAction action = new JpaRepositoryAction();
 		action.setName("S1ToS2TransitionAction");
-		
 		actionSet.add(action);
+		actionRepository.save(actionSet);
+		
 		transitionRepository.save(new JpaRepositoryTransition(statesMap.get("S1"), statesMap.get("S2"), "E1"));
 	}
 
@@ -63,9 +73,30 @@ public class StateMachineRepositoryTests {
 	}
 
 	@Test
-	public void test() {
+	public void createStateMachineFromRepository() {
 		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine();
 		assertNotNull(stateMachine);
 	}
-
+	
+	@Test
+	public void persistAndRestoreStateMachineWithContext(){
+		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine();
+		stateMachine.getExtendedState().getVariables().put("testClass", this);
+	}
+	
+	@org.springframework.boot.test.context.TestConfiguration
+	static class TestConfiguration {
+		
+		@Bean
+		@Primary
+		public DataSource dataSource(){
+			DriverManagerDataSource dataSource = new DriverManagerDataSource();
+			dataSource.setUrl("jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE");
+			dataSource.setUsername("sa");
+			dataSource.setPassword("");
+			dataSource.setDriverClassName("org.h2.Driver");
+			return dataSource;
+		}
+	}
+	
 }
