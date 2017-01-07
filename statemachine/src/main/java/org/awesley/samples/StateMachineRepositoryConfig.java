@@ -29,6 +29,11 @@ public class StateMachineRepositoryConfig extends StateMachineConfigurerAdapter<
     @Autowired
     private TransitionRepository<JpaRepositoryTransition> transitionRepository;
 
+//    @Override
+//    public void configure(StateMachineConfigurationConfigurer<String, String> config) throws Exception {
+//    	config.withConfiguration().taskExecutor(new SyncTaskExecutor()); // <-- turns out this is the default
+//    }
+    
     @Override
     public void configure(StateMachineConfigurationConfigurer<String, String> config) throws Exception {
     	config.withConfiguration().taskExecutor(new SyncTaskExecutor());

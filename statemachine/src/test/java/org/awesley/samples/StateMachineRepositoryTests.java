@@ -17,10 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.statemachine.StateContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.data.ActionRepository;
 import org.springframework.statemachine.data.StateRepository;
@@ -33,6 +37,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class StateMachineRepositoryTests {
+	
+	@Autowired
+	ConfigurableApplicationContext context;
+	
 	@Autowired
 	StateRepository<JpaRepositoryState> stateRepository;
 
@@ -57,12 +65,15 @@ public class StateMachineRepositoryTests {
 		actionSet.add(action);
 		actionRepository.save(actionSet);
 		
-		transitionRepository.save(new JpaRepositoryTransition(statesMap.get("S1"), statesMap.get("S2"), "E1"));
+		actionRepository.save(action);
+		
+		actionSet.add(action);
+		transitionRepository.save(new JpaRepositoryTransition("Proposal", statesMap.get("S1"), statesMap.get("S2"), "E1", actionSet));
 	}
 
 	private Map<String, JpaRepositoryState> initializeStates(String initialState, List<String> states) {
 		Map<String, JpaRepositoryState> statesMap = new HashMap<String, JpaRepositoryState>();
-		states.forEach(name -> statesMap.put(name, new JpaRepositoryState(name, name == initialState)));
+		states.forEach(name -> statesMap.put(name, new JpaRepositoryState("Proposal", name, name == initialState)));
 		stateRepository.save(statesMap.values());
 		
 		return statesMap;
@@ -74,7 +85,7 @@ public class StateMachineRepositoryTests {
 
 	@Test
 	public void createStateMachineFromRepository() {
-		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine();
+		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
 		assertNotNull(stateMachine);
 	}
 	
@@ -99,4 +110,17 @@ public class StateMachineRepositoryTests {
 		}
 	}
 	
+	private class ThreadIdAction implements Action<String, String> {
+
+		private long actionThreadId = 0;
+		
+		@Override
+		public void execute(StateContext<String, String> context) {
+			actionThreadId = Thread.currentThread().getId();
+		}
+
+		public long getActionThreadId() {
+			return actionThreadId;
+		}
+	}
 }
