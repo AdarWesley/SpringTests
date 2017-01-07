@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.statemachine.StateContext;
 import org.springframework.context.annotation.Bean;
@@ -60,14 +59,16 @@ public class StateMachineRepositoryTests {
 		statesMap = initializeStates("S1", Arrays.asList("S1", "S2"));
 		
 		Set<JpaRepositoryAction> actionSet = new HashSet<JpaRepositoryAction>();
-		JpaRepositoryAction action = new JpaRepositoryAction();
-		action.setName("S1ToS2TransitionAction");
-		actionSet.add(action);
+		JpaRepositoryAction action1 = new JpaRepositoryAction();
+		action1.setName("S1ToS2TransitionAction");
+		actionSet.add(action1);
+
+		JpaRepositoryAction action2 = new JpaRepositoryAction();
+		action2.setName("TestClassInstanceAction");
+		actionSet.add(action2);
+		
 		actionRepository.save(actionSet);
 		
-		actionRepository.save(action);
-		
-		actionSet.add(action);
 		transitionRepository.save(new JpaRepositoryTransition("Proposal", statesMap.get("S1"), statesMap.get("S2"), "E1", actionSet));
 	}
 
@@ -91,8 +92,14 @@ public class StateMachineRepositoryTests {
 	
 	@Test
 	public void persistAndRestoreStateMachineWithContext(){
-		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine();
+		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
 		stateMachine.getExtendedState().getVariables().put("testClass", this);
+		stateMachine.start();
+		stateMachine.sendEvent("E1");
+		
+		TestClassInstanceAction testClassAction = (TestClassInstanceAction)
+				context.getBean("TestClassInstanceAction");
+		assertSame(this, testClassAction.getTestClassInstance());
 	}
 	
 	@org.springframework.boot.test.context.TestConfiguration
@@ -108,9 +115,29 @@ public class StateMachineRepositoryTests {
 			dataSource.setDriverClassName("org.h2.Driver");
 			return dataSource;
 		}
+		
+		@Bean
+		public Action<String, String> S1ToS2TransitionAction(){
+			return new ThreadIdAction();
+		}
+		
+		@Bean
+		public Action<String, String> TestClassInstanceAction(){
+			return new TestClassInstanceAction();
+		}
 	}
 	
-	private class ThreadIdAction implements Action<String, String> {
+	@Test
+	public void stateMachineActionGetsThreadContext() {
+		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
+		stateMachine.start();
+		stateMachine.sendEvent("E1");
+		
+		ThreadIdAction threadIdAction = (ThreadIdAction)context.getBean("S1ToS2TransitionAction");
+		assertEquals(Thread.currentThread().getId(), threadIdAction.getActionThreadId());
+	}
+
+	static class ThreadIdAction implements Action<String, String> {
 
 		private long actionThreadId = 0;
 		
@@ -121,6 +148,23 @@ public class StateMachineRepositoryTests {
 
 		public long getActionThreadId() {
 			return actionThreadId;
+		}
+	}
+	
+	static class TestClassInstanceAction implements Action<String, String> {
+
+		private StateMachineRepositoryTests testClassInstance = null;
+		
+		@Override
+		public void execute(StateContext<String, String> context) {
+			if (context.getExtendedState().getVariables().containsKey("testClass")){
+				testClassInstance = (StateMachineRepositoryTests)
+						context.getExtendedState().getVariables().get("testClass");
+			}
+		}
+
+		public StateMachineRepositoryTests getTestClassInstance() {
+			return testClassInstance;
 		}
 	}
 }
