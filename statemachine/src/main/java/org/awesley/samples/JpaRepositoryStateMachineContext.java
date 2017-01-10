@@ -1,10 +1,13 @@
 package org.awesley.samples;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -13,6 +16,7 @@ import javax.persistence.OneToMany;
 import org.springframework.statemachine.ExtendedState;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.data.BaseRepositoryEntity;
+import org.springframework.statemachine.support.DefaultExtendedState;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -30,8 +34,28 @@ public class JpaRepositoryStateMachineContext<S, E> extends BaseRepositoryEntity
 	private S state;
 	private E event;
 	
+	@Convert(converter = JpaConverterJson.class)
 	private Map<S,S> historyStates;
 	
+	@Convert(converter = JpaConverterJson.class)
+	private Map<String, Object> eventHeaders;
+	
+	@Convert(converter = JpaConverterJson.class)
+	private ExtendedState extendedState;
+	
+	public JpaRepositoryStateMachineContext() {
+	}
+
+	public JpaRepositoryStateMachineContext(StateMachineContext<S,E> stateMachineContext){
+		this.id = stateMachineContext.getId();
+		this.childs = cloneChildsCollection(stateMachineContext);
+		this.state = stateMachineContext.getState();
+		this.event = stateMachineContext.getEvent();
+		this.historyStates = cloneHistoryStates(stateMachineContext);
+		this.eventHeaders = cloneEventHeaders(stateMachineContext);
+		this.extendedState = cloneExtendedState(stateMachineContext);
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -64,31 +88,73 @@ public class JpaRepositoryStateMachineContext<S, E> extends BaseRepositoryEntity
 		this.event = event;
 	}
 
-	public String getHistoryStates() {
-		return mapToString(historyStates);
+	public Map<S, S> getHistoryStates() {
+		return historyStates;
 	}
 
-	private <X,Y> String mapToString(Map<X,Y> map) {
-		return map.entrySet().stream()
-				.map(e -> e.getKey().toString() + "->" + e.getValue().toString())
-				.collect(Collectors.joining(";"));
-	}
-
-	private <X, Y> Map<X, Y> stringToMap(String str){
-		//Map<X, Y>
-		Arrays.stream(str.split(";")).map(s -> s.split("->")).collect(Collectors.toMap(sa -> sa[0], sa -> sa[1]));
-	}
-	
 	public void setHistoryStates(Map<S, S> historyStates) {
 		this.historyStates = historyStates;
 	}
 
 	public Map<String, Object> getEventHeaders() {
-		return null;
+		return eventHeaders;
+	}
+
+	public void setEventHeaders(Map<String, Object> eventHeaders) {
+		this.eventHeaders = eventHeaders;
 	}
 
 	public ExtendedState getExtendedState() {
-		// TODO Auto-generated method stub
-		return null;
+		return extendedState;
+	}
+
+	public void setExtendedState(ExtendedState extendedState) {
+		this.extendedState = extendedState;
+	}
+	
+	private List<JpaRepositoryStateMachineContext<S, E>> cloneChildsCollection(
+			StateMachineContext<S, E> stateMachineContext) {
+		List<JpaRepositoryStateMachineContext<S, E>> childs;
+		if (stateMachineContext.getChilds() == null){
+			childs = null;
+		} else {
+			childs = new ArrayList<JpaRepositoryStateMachineContext<S,E>>();
+			childs.addAll(stateMachineContext.getChilds().stream()
+					.map(cc -> new JpaRepositoryStateMachineContext<>(cc))
+					.collect(Collectors.toList()));
+		}
+		return childs;
+	}
+
+	private Map<S,S> cloneHistoryStates(StateMachineContext<S, E> stateMachineContext) {
+		Map<S,S> historyStates;
+		if (stateMachineContext.getHistoryStates() == null){
+			historyStates = null;
+		} else {
+			historyStates = new HashMap<S,S>();
+			historyStates.putAll(stateMachineContext.getHistoryStates());
+		}
+		return historyStates;
+	}
+
+	private HashMap<String, Object> cloneEventHeaders(StateMachineContext<S, E> stateMachineContext) {
+		HashMap<String,Object> eventHeaders;
+		if (stateMachineContext.getEventHeaders() == null){
+			eventHeaders = null;
+		} else {
+			eventHeaders = new HashMap<String,Object>();
+			eventHeaders.putAll(stateMachineContext.getEventHeaders());
+		}
+		return eventHeaders;
+	}
+
+	private ExtendedState cloneExtendedState(StateMachineContext<S, E> stateMachineContext) {
+		ExtendedState extendedState;
+		if (stateMachineContext.getExtendedState() == null){
+			extendedState = null;
+		} else {
+			extendedState = new DefaultExtendedState(stateMachineContext.getExtendedState().getVariables());
+		}
+		return extendedState;
 	}
 }
