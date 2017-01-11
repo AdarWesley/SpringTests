@@ -31,6 +31,8 @@ import org.springframework.statemachine.data.TransitionRepository;
 import org.springframework.statemachine.data.jpa.JpaRepositoryAction;
 import org.springframework.statemachine.data.jpa.JpaRepositoryState;
 import org.springframework.statemachine.data.jpa.JpaRepositoryTransition;
+import org.springframework.statemachine.persist.DefaultStateMachinePersister;
+import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -51,6 +53,9 @@ public class StateMachineRepositoryTests {
 	
 	@Autowired
 	StateMachineFactory<String, String> stateMachineRepositoryFactory;
+	
+	@Autowired
+	PersistStateMachineContextRepository persistRepository;
 	
 	@Before
 	public void setUpBeforeClass() throws Exception {
@@ -91,8 +96,9 @@ public class StateMachineRepositoryTests {
 	}
 	
 	@Test
-	public void persistAndRestoreStateMachineWithContext(){
+	public void persistAndRestoreStateMachineWithContext() throws Exception {
 		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
+		StateMachine<String, String> stateMachine2 = stateMachineRepositoryFactory.getStateMachine("Proposal");
 		stateMachine.getExtendedState().getVariables().put("testClass", this);
 		stateMachine.start();
 		stateMachine.sendEvent("E1");
@@ -100,6 +106,15 @@ public class StateMachineRepositoryTests {
 		TestClassInstanceAction testClassAction = (TestClassInstanceAction)
 				context.getBean("TestClassInstanceAction");
 		assertSame(this, testClassAction.getTestClassInstance());
+		
+		RepositoryStateMachinePersist<String, String> stateMachinePersist = 
+				new RepositoryStateMachinePersist<String,String>(persistRepository);
+		DefaultStateMachinePersister<String, String, String> persister = new DefaultStateMachinePersister<>(stateMachinePersist);
+		
+		persister.persist(stateMachine, "proposalId");
+		persister.restore(stateMachine2, "proposalId");
+		
+		assertEquals("S2", stateMachine2.getState().getId());
 	}
 	
 	@org.springframework.boot.test.context.TestConfiguration

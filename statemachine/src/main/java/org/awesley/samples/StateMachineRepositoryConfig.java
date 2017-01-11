@@ -18,8 +18,8 @@ import org.springframework.statemachine.data.jpa.JpaRepositoryTransition;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories("org.springframework.statemachine.data.jpa")
-@EntityScan("org.springframework.statemachine.data.jpa")
+@EnableJpaRepositories(basePackages = { "org.springframework.statemachine.data.jpa", "org.awesley.samples" })
+@EntityScan(basePackages = { "org.springframework.statemachine.data.jpa", "org.awesley.samples" })
 @EnableStateMachineFactory(name = { "stateMachineRepositoryFactory" })
 public class StateMachineRepositoryConfig extends StateMachineConfigurerAdapter<String, String> {
 
@@ -49,5 +49,10 @@ public class StateMachineRepositoryConfig extends StateMachineConfigurerAdapter<
     @Bean
 	public StateMachineModelFactory<String, String> modelFromRepositoryFactory() {
         return new RepositoryStateMachineModelFactory(stateRepository, transitionRepository);
+    }
+    
+    @Bean
+    public PersistStateMachineContextRepository persistStateMachineContextRepository(JpaStateMachineContextRepositoy jpaRepository){
+    	return new PersistStateMachineContextRepository(jpaRepository);
     }
 }
