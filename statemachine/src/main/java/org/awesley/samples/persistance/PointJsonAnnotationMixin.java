@@ -1,4 +1,4 @@
-package org.awesley.samples;
+package org.awesley.samples.persistance;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

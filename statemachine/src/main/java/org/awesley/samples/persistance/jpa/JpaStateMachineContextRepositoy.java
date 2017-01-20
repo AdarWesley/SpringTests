@@ -1,4 +1,4 @@
-package org.awesley.samples;
+package org.awesley.samples.persistance.jpa;
 
 import org.springframework.data.repository.CrudRepository;
 

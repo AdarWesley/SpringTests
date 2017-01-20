@@ -1,9 +1,10 @@
-package org.awesley.samples;
+package org.awesley.samples.persistance.jpa;
 
 import java.io.IOException;
 
 import javax.persistence.AttributeConverter;
 
+import org.awesley.samples.persistance.PointJsonAnnotationMixin;
 import org.springframework.data.geo.Point;
 import org.springframework.statemachine.support.DefaultExtendedState;
 

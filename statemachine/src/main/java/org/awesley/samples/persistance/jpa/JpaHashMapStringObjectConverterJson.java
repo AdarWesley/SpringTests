@@ -1,4 +1,4 @@
-package org.awesley.samples;
+package org.awesley.samples.persistance.jpa;
 
 import java.io.IOException;
 import java.util.HashMap;

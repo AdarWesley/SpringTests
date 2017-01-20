@@ -1,4 +1,4 @@
-package org.awesley.samples;
+package org.awesley.samples.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

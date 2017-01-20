@@ -1,5 +1,7 @@
-package org.awesley.samples;
+package org.awesley.samples.configuration;
 
+import org.awesley.samples.persistance.PersistStateMachineContextRepository;
+import org.awesley.samples.persistance.jpa.JpaStateMachineContextRepositoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +20,8 @@ import org.springframework.statemachine.data.jpa.JpaRepositoryTransition;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(basePackages = { "org.springframework.statemachine.data.jpa", "org.awesley.samples" })
-@EntityScan(basePackages = { "org.springframework.statemachine.data.jpa", "org.awesley.samples" })
+@EnableJpaRepositories(basePackages = { "org.springframework.statemachine.data.jpa", "org.awesley.samples.persistance" })
+@EntityScan(basePackages = { "org.springframework.statemachine.data.jpa", "org.awesley.samples.persistance.jpa" })
 @EnableStateMachineFactory(name = { "stateMachineRepositoryFactory" })
 public class StateMachineRepositoryConfig extends StateMachineConfigurerAdapter<String, String> {
 

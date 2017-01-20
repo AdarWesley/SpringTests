@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.awesley.samples.persistance.PersistStateMachineContextRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

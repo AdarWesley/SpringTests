@@ -1,4 +1,4 @@
-package org.awesley.samples;
+package org.awesley.samples.persistance.jpa;
 
 import java.util.ArrayList;
 import java.util.HashMap;

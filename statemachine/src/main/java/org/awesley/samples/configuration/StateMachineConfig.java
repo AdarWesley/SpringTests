@@ -1,7 +1,9 @@
-package org.awesley.samples;
+package org.awesley.samples.configuration;
 
 import java.util.EnumSet;
 
+import org.awesley.samples.Events;
+import org.awesley.samples.States;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
