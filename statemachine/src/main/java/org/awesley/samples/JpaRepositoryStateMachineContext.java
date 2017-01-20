@@ -56,7 +56,7 @@ public class JpaRepositoryStateMachineContext extends BaseRepositoryEntity imple
 	private Map<String, Object> eventHeaders;
 	
 	@Convert(converter = JpaExtendedStateConverterJson.class)
-	@Column(name = "EXTENDED_STATE")
+	@Column(name = "EXTENDED_STATE", length=1024)
 	private ExtendedState extendedState;
 	
 	public JpaRepositoryStateMachineContext() {

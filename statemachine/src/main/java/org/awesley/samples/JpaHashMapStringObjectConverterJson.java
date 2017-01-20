@@ -10,7 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JpaHashMapStringObjectConverterJson implements AttributeConverter<HashMap<String, Object>, String> {
 
-	private final static ObjectMapper objectMapper = new ObjectMapper();
+	private final static ObjectMapper objectMapper = new ObjectMapper()
+			.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 
 	@Override
 	public String convertToDatabaseColumn(HashMap<String, Object> meta) {

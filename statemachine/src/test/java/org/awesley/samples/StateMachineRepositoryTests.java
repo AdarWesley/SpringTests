@@ -21,6 +21,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.statemachine.StateContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.geo.Point;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
@@ -100,6 +101,8 @@ public class StateMachineRepositoryTests {
 		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
 		StateMachine<String, String> stateMachine2 = stateMachineRepositoryFactory.getStateMachine("Proposal");
 		stateMachine.getExtendedState().getVariables().put("testClass", this);
+		stateMachine.getExtendedState().getVariables().put("key1", "value1");
+		stateMachine.getExtendedState().getVariables().put("key2", new Point(1.23, 4.56));
 		stateMachine.start();
 		stateMachine.sendEvent("E1");
 		
@@ -115,6 +118,12 @@ public class StateMachineRepositoryTests {
 		persister.restore(stateMachine2, "proposalId");
 		
 		assertEquals("S2", stateMachine2.getState().getId());
+		
+		assertEquals("value1", stateMachine2.getExtendedState().getVariables().get("key1"));
+		Point pt = stateMachine2.getExtendedState().get("key2", Point.class);
+		assertSame(Point.class, pt.getClass());
+		assertEquals(1.23, pt.getX(), 0.001);
+		assertEquals(4.56, pt.getY(), 0.001);
 	}
 	
 	@org.springframework.boot.test.context.TestConfiguration
