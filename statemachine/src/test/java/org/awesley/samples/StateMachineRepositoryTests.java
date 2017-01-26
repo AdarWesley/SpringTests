@@ -45,13 +45,7 @@ public class StateMachineRepositoryTests {
 	ConfigurableApplicationContext context;
 	
 	@Autowired
-	StateRepository<JpaRepositoryState> stateRepository;
-
-	@Autowired
-	TransitionRepository<JpaRepositoryTransition> transitionRepository;
-	
-	@Autowired
-	ActionRepository<JpaRepositoryAction> actionRepository;
+	StateMachineRepositoryInitializer stateMachineRepositoryInitializer;
 	
 	@Autowired
 	StateMachineFactory<String, String> stateMachineRepositoryFactory;
@@ -61,30 +55,7 @@ public class StateMachineRepositoryTests {
 	
 	@Before
 	public void setUpBeforeClass() throws Exception {
-		Map<String, JpaRepositoryState> statesMap;
-		
-		statesMap = initializeStates("S1", Arrays.asList("S1", "S2"));
-		
-		Set<JpaRepositoryAction> actionSet = new HashSet<JpaRepositoryAction>();
-		JpaRepositoryAction action1 = new JpaRepositoryAction();
-		action1.setName("S1ToS2TransitionAction");
-		actionSet.add(action1);
-
-		JpaRepositoryAction action2 = new JpaRepositoryAction();
-		action2.setName("TestClassInstanceAction");
-		actionSet.add(action2);
-		
-		actionRepository.save(actionSet);
-		
-		transitionRepository.save(new JpaRepositoryTransition("Proposal", statesMap.get("S1"), statesMap.get("S2"), "E1", actionSet));
-	}
-
-	private Map<String, JpaRepositoryState> initializeStates(String initialState, List<String> states) {
-		Map<String, JpaRepositoryState> statesMap = new HashMap<String, JpaRepositoryState>();
-		states.forEach(name -> statesMap.put(name, new JpaRepositoryState("Proposal", name, name == initialState)));
-		stateRepository.save(statesMap.values());
-		
-		return statesMap;
+		stateMachineRepositoryInitializer.initializeProposalStateMachine();
 	}
 
 	@After
@@ -127,6 +98,16 @@ public class StateMachineRepositoryTests {
 		assertEquals(4.56, pt.getY(), 0.001);
 	}
 	
+	@Test
+	public void stateMachineActionGetsThreadContext() {
+		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
+		stateMachine.start();
+		stateMachine.sendEvent("E1");
+		
+		ThreadIdAction threadIdAction = (ThreadIdAction)context.getBean("S1ToS2TransitionAction");
+		assertEquals(Thread.currentThread().getId(), threadIdAction.getActionThreadId());
+	}
+
 	@org.springframework.boot.test.context.TestConfiguration
 	static class TestConfiguration {
 		
@@ -142,6 +123,12 @@ public class StateMachineRepositoryTests {
 		}
 		
 		@Bean
+		public StateMachineRepositoryInitializer stateMachineRepositoryInitializer()
+		{
+			return new StateMachineRepositoryInitializer();
+		}
+		
+		@Bean
 		public Action<String, String> S1ToS2TransitionAction(){
 			return new ThreadIdAction();
 		}
@@ -152,16 +139,6 @@ public class StateMachineRepositoryTests {
 		}
 	}
 	
-	@Test
-	public void stateMachineActionGetsThreadContext() {
-		StateMachine<String, String> stateMachine = stateMachineRepositoryFactory.getStateMachine("Proposal");
-		stateMachine.start();
-		stateMachine.sendEvent("E1");
-		
-		ThreadIdAction threadIdAction = (ThreadIdAction)context.getBean("S1ToS2TransitionAction");
-		assertEquals(Thread.currentThread().getId(), threadIdAction.getActionThreadId());
-	}
-
 	static class ThreadIdAction implements Action<String, String> {
 
 		private long actionThreadId = 0;

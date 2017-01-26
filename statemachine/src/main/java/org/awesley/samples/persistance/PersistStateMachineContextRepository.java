@@ -1,7 +1,7 @@
 package org.awesley.samples.persistance;
 
 import org.awesley.samples.persistance.jpa.JpaRepositoryStateMachineContext;
-import org.awesley.samples.persistance.jpa.JpaStateMachineContextRepositoy;
+import org.awesley.samples.persistance.JpaStateMachineContextRepositoy;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachineContextRepository;
 
