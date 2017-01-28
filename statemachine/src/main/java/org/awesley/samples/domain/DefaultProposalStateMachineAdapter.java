@@ -40,7 +40,6 @@ public class DefaultProposalStateMachineAdapter implements ProposalStateMachineA
 		
 		jpaProposal.setStateMachine(stateMachine);
 		
-		jpaProposal.setStateMachineContext(getProposalStateMachineContext(proposal.getID(), stateMachine));
 		jpaProposal.setStatus(stateMachine.getState().getId());
 		
 		return stateMachine;

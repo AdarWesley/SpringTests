@@ -54,12 +54,13 @@ public class StateMachineRepositoryTests {
 	PersistStateMachineContextRepository persistRepository;
 	
 	@Before
-	public void setUpBeforeClass() throws Exception {
+	public void setUpBefore() throws Exception {
 		stateMachineRepositoryInitializer.initializeProposalStateMachine();
 	}
 
 	@After
-	public void tearDownAfterClass() throws Exception {
+	public void tearDownAfter() throws Exception {
+		stateMachineRepositoryInitializer.clearProposalStateMachine();
 	}
 
 	@Test

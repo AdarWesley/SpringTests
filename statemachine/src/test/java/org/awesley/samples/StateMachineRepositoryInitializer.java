@@ -54,7 +54,7 @@ public class StateMachineRepositoryInitializer {
 	}
 
 	public void clearProposalStateMachine() {
-		actionRepository.deleteAll();
+		//actionRepository.deleteAll();
 		transitionRepository.deleteAll();
 		stateRepository.deleteAll();		
 	}	

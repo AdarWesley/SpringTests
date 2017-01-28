@@ -1,6 +1,6 @@
 package org.awesley.samples.domain;
 
-import org.springframework.statemachine.StateMachineContext;
+import org.springframework.statemachine.StateMachine;
 
 public interface Proposal {
 	String getID();
@@ -12,6 +12,6 @@ public interface Proposal {
 	String getStatus();
 	void setStatus(String status);
 	
-	StateMachineContext<String, String> getStateMachineContext();
-	void setStateMachineContext(StateMachineContext<String, String> stateMachineContext);
+	StateMachine<String, String> getStateMachine();
+	void setStateMachine(StateMachine<String, String> stateMachine);
 }

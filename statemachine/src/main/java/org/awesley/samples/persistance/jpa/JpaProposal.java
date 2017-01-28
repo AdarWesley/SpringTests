@@ -35,8 +35,8 @@ public class JpaProposal implements Proposal {
 	private String status;
 	
 	//@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	@Transient
-	private JpaRepositoryStateMachineContext stateMachineContext;
+//	@Transient
+//	private JpaRepositoryStateMachineContext stateMachineContext;
 	
 	@Transient
 	private StateMachine<String, String> stateMachine;
@@ -72,19 +72,11 @@ public class JpaProposal implements Proposal {
 	}
 
 	@Override
-	public StateMachineContext<String, String> getStateMachineContext() {
-		return stateMachineContext;
-	}
-
-	@Override
-	public void setStateMachineContext(StateMachineContext<String, String> stateMachineContext) {
-		this.stateMachineContext = (JpaRepositoryStateMachineContext) stateMachineContext;
-	}
-
 	public StateMachine<String, String> getStateMachine(){
 		return stateMachine;
 	}
 	
+	@Override
 	public void setStateMachine(StateMachine<String, String> stateMachine) {
 		this.stateMachine = stateMachine;
 	}

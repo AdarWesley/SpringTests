@@ -55,7 +55,6 @@ public class ProposalStateMachineTests {
 		
 		assertNotNull(p);
 		assertEquals("S1", p.getStatus());
-		assertNotNull(p.getStateMachineContext());
 		
 		assertNotNull(proposalStateMachineAdapter);
 		StateMachine<String, String> stateMachine = proposalStateMachineAdapter.getStateMachine(p);
@@ -69,7 +68,6 @@ public class ProposalStateMachineTests {
 		Proposal p = context.getBean(Proposal.class);
 		
 		assertNotNull(p);
-		assertNotNull(p.getStateMachineContext());
 		
 		proposalRepository.save((JpaProposal)p);
 		proposalStateMachineAdapter.saveStateMachine(p);
