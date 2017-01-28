@@ -51,5 +51,11 @@ public class StateMachineRepositoryInitializer {
 		stateRepository.save(statesMap.values());
 		
 		return statesMap;
+	}
+
+	public void clearProposalStateMachine() {
+		actionRepository.deleteAll();
+		transitionRepository.deleteAll();
+		stateRepository.deleteAll();		
 	}	
 }

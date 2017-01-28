@@ -40,12 +40,13 @@ public class ProposalStateMachineTests {
 	JpaProposalRepository proposalRepository;
 
 	@Before
-	public void setUpBeforeClass() throws Exception {
+	public void setUpBefore() throws Exception {
 		stateMachineRepositoryInitializer.initializeProposalStateMachine();
 	}
 
 	@After
-	public void tearDownAfterClass() throws Exception {
+	public void tearDownAfter() throws Exception {
+		stateMachineRepositoryInitializer.clearProposalStateMachine();
 	}
 
 	@Test
@@ -71,6 +72,7 @@ public class ProposalStateMachineTests {
 		assertNotNull(p.getStateMachineContext());
 		
 		proposalRepository.save((JpaProposal)p);
+		proposalStateMachineAdapter.saveStateMachine(p);
 	}
 
 	@org.springframework.boot.test.context.TestConfiguration

@@ -6,5 +6,6 @@ public interface ProposalStateMachineAdapter {
 
 	StateMachine<String, String> getStateMachine(Proposal proposal);
 	StateMachine<String, String> createStateMachine(Proposal proposal);
+	void saveStateMachine(Proposal proposal);
 
 }

@@ -34,7 +34,8 @@ public class JpaProposal implements Proposal {
 	@Column(name = "STATUS")
 	private String status;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	//@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@Transient
 	private JpaRepositoryStateMachineContext stateMachineContext;
 	
 	@Transient

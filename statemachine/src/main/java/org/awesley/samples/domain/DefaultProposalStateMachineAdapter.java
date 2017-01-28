@@ -1,5 +1,6 @@
 package org.awesley.samples.domain;
 
+import org.awesley.samples.persistance.JpaStateMachineContextRepositoy;
 import org.awesley.samples.persistance.jpa.JpaProposal;
 import org.awesley.samples.persistance.jpa.JpaRepositoryStateMachineContext;
 import org.hibernate.cfg.NotYetImplementedException;
@@ -13,6 +14,9 @@ import org.springframework.statemachine.persist.DefaultStateMachinePersister;
 public class DefaultProposalStateMachineAdapter implements ProposalStateMachineAdapter {
 	@Autowired
 	StateMachineFactory<String, String> stateMachineRepositoryFactory;
+	
+	@Autowired
+	JpaStateMachineContextRepositoy stateMachineContextRepository;
 	
 	@Override
 	public StateMachine<String, String> getStateMachine(Proposal proposal) {
@@ -42,6 +46,18 @@ public class DefaultProposalStateMachineAdapter implements ProposalStateMachineA
 		return stateMachine;
 	}
 
+	@Override
+	public void saveStateMachine(Proposal proposal) {
+		JpaProposal jpaProposal = (JpaProposal)proposal;
+		
+		StateMachine<String, String> stateMachine = jpaProposal.getStateMachine();
+		JpaRepositoryStateMachineContext stateMachineContext = 
+				getProposalStateMachineContext(proposal.getID(), stateMachine);
+		
+		stateMachineContext.getExtendedState().getVariables().remove("proposal");
+		stateMachineContextRepository.save(stateMachineContext);
+	}
+	
 	private JpaRepositoryStateMachineContext getProposalStateMachineContext(String proposalId, StateMachine<String, String> stateMachine) {
 		JpaRepositoryStateMachineContext[] jpaStateMachineContextContainer = 
 				new JpaRepositoryStateMachineContext[1]; 
@@ -70,4 +86,5 @@ public class DefaultProposalStateMachineAdapter implements ProposalStateMachineA
 		
 		return jpaStateMachineContextContainer[0];
 	}
+
 }
