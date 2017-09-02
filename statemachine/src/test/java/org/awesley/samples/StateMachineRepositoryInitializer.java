@@ -40,7 +40,7 @@ public class StateMachineRepositoryInitializer {
 		action2.setName("TestClassInstanceAction");
 		actionSet.add(action2);
 		
-		actionRepository.save(actionSet);
+		actionRepository.saveAll(actionSet);
 		
 		transitionRepository.save(new JpaRepositoryTransition("Proposal", statesMap.get("S1"), statesMap.get("S2"), "E1", actionSet));
 	}
@@ -48,7 +48,7 @@ public class StateMachineRepositoryInitializer {
 	public Map<String, JpaRepositoryState> initializeStates(String initialState, List<String> states) {
 		Map<String, JpaRepositoryState> statesMap = new HashMap<String, JpaRepositoryState>();
 		states.forEach(name -> statesMap.put(name, new JpaRepositoryState("Proposal", name, name == initialState)));
-		stateRepository.save(statesMap.values());
+		stateRepository.saveAll(statesMap.values());
 		
 		return statesMap;
 	}

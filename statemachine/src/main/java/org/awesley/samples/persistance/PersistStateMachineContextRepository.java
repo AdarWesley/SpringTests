@@ -1,7 +1,11 @@
 package org.awesley.samples.persistance;
 
 import org.awesley.samples.persistance.jpa.JpaRepositoryStateMachineContext;
+
+import java.util.Optional;
+
 import org.awesley.samples.persistance.JpaStateMachineContextRepositoy;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachineContextRepository;
 
@@ -23,7 +27,8 @@ public class PersistStateMachineContextRepository implements StateMachineContext
 
 	@Override
 	public StateMachineContext<String, String> getContext(String id) {
-		return jpaRepository.findOne(id);
+		Optional<JpaRepositoryStateMachineContext> jpaContext = ((CrudRepository<JpaRepositoryStateMachineContext, String>)jpaRepository).findById(id);
+		return jpaContext.get();
 	}
 
 }

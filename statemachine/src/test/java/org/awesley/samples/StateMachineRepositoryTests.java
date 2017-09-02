@@ -1,13 +1,8 @@
 package org.awesley.samples;
 
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
 import javax.sql.DataSource;
 
@@ -19,20 +14,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.statemachine.StateContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.geo.Point;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineFactory;
-import org.springframework.statemachine.data.ActionRepository;
-import org.springframework.statemachine.data.StateRepository;
-import org.springframework.statemachine.data.TransitionRepository;
-import org.springframework.statemachine.data.jpa.JpaRepositoryAction;
-import org.springframework.statemachine.data.jpa.JpaRepositoryState;
-import org.springframework.statemachine.data.jpa.JpaRepositoryTransition;
 import org.springframework.statemachine.persist.DefaultStateMachinePersister;
 import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
 import org.springframework.test.context.junit4.SpringRunner;
