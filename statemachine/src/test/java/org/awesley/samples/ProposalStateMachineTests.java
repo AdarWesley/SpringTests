@@ -57,7 +57,7 @@ public class ProposalStateMachineTests {
 		assertEquals("S1", p.getStatus());
 		
 		assertNotNull(proposalStateMachineAdapter);
-		StateMachine<String, String> stateMachine = proposalStateMachineAdapter.getStateMachine(p);
+		StateMachine<String, String> stateMachine = p.getStateMachine();
 		assertNotNull(stateMachine);
 		
 		assertEquals("S1", stateMachine.getState().getId());

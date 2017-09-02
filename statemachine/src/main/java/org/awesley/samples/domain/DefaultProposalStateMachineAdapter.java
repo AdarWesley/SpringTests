@@ -23,9 +23,7 @@ public class DefaultProposalStateMachineAdapter implements ProposalStateMachineA
 		JpaProposal jpaProposal = (JpaProposal)proposal;
 		
 		StateMachine<String, String> stateMachine = jpaProposal.getStateMachine();
-		if (stateMachine == null){
-			stateMachine = createStateMachine(proposal);
-		}
+
 		return stateMachine;
 	}
 
